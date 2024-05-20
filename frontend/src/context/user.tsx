@@ -12,7 +12,7 @@ export type UserContextType = {
 export const UserContext = React.createContext<UserContextType | null>(null);
 
 function UserContextProvider({ children }: Readonly<UserContextProviderProps>) {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const context = useMemo(
     () => ({
