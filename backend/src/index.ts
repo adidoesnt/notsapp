@@ -1,6 +1,8 @@
-import express from "express";
-import cors from "cors";
-import { json, urlencoded } from "body-parser";
+import express from 'express';
+import cors from 'cors';
+import { json, urlencoded } from 'body-parser';
+import { routes } from 'api/router';
+import { getHttpServer, getServer } from 'api/server';
 
 const { PORT = 3001 } = process.env;
 
@@ -10,10 +12,10 @@ app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
-app.get("/", (_, res) => {
-    res.send("Hello World!");
-});
+app.use(routes());
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+const httpServer = getHttpServer(app);
+const server = getServer(httpServer);
+
+server.init();
+httpServer.init(PORT);
