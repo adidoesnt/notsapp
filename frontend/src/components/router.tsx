@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import Login from "../pages/login";
 import Home from "../pages/home";
+import Chat from "../pages/chat";
 
 export const UnauthenticatedRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ export const AuthenticatedRouter = createBrowserRouter(
     <Route path="/">
       <Route path="/" element={<Home/>} />
       <Route path="/home" element={<Home/>} />
+      <Route path="/chat/:roomId" element={<Chat />} />
     </Route>
   )
 );
