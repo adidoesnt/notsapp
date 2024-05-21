@@ -18,7 +18,7 @@ export const Message = {
                     primaryKey: true,
                     type: STRING,
                     allowNull: false,
-                    field: 'uuid'
+                    field: 'uid'
                 }
             },
             {

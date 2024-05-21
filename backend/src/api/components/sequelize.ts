@@ -20,21 +20,22 @@ export const sequelize = new Sequelize({
     dialect: 'postgres'
 });
 
-const addAssociations = (models: any) => {
-    const { MessageModel, UserModel, ChatModel, ChatUserModel } = sequelize.models;
+const addAssociations = (sequelize: Sequelize) => {
+    const { Message, User, Chat, ChatUser } =
+        sequelize.models;
 
-    MessageModel.belongsTo(UserModel, {
+    Message.belongsTo(User, {
         as: 'sender',
         foreignKey: 'sender_uuid'
     });
 
-    MessageModel.belongsTo(ChatModel, {
+    Message.belongsTo(Chat, {
         as: 'chat',
         foreignKey: 'chat_uid'
     });
 
-    UserModel.belongsToMany(ChatModel, {
-        through: ChatUserModel
+    User.belongsToMany(Chat, {
+        through: ChatUser,
     });
 };
 
@@ -47,6 +48,7 @@ export const database = {
             );
             console.log('Connection has been established successfully.');
             await sequelize.sync();
+            addAssociations(sequelize);
             console.log('All models were synchronized successfully.');
         } catch (error) {
             console.error('Unable to connect to the database:', error);
