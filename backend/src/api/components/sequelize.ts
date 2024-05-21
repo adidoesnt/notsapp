@@ -10,48 +10,57 @@ const {
     DATABASE_SCHEMA
 } = process.env;
 
-export const sequelize = new Sequelize({
-    host: DATABASE_HOST,
-    port: Number(DATABASE_PORT),
-    database: DATABASE_NAME,
-    username: DATABASE_USERNAME,
-    password: DATABASE_PASSWORD,
-    schema: DATABASE_SCHEMA,
-    dialect: 'postgres'
-});
+export class Database {
+    sequelize: Sequelize;
 
-const addAssociations = (sequelize: Sequelize) => {
-    const { Message, User, Chat, ChatUser } =
-        sequelize.models;
+    constructor() {
+        this.sequelize = new Sequelize({
+            host: DATABASE_HOST,
+            port: Number(DATABASE_PORT),
+            database: DATABASE_NAME,
+            username: DATABASE_USERNAME,
+            password: DATABASE_PASSWORD,
+            schema: DATABASE_SCHEMA,
+            dialect: 'postgres'
+        });
+    }
 
-    Message.belongsTo(User, {
-        as: 'sender',
-        foreignKey: 'sender_uuid'
-    });
+    addAssociations() {
+        const { Message, User, Chat, ChatUser } = this.sequelize.models;
 
-    Message.belongsTo(Chat, {
-        as: 'chat',
-        foreignKey: 'chat_uid'
-    });
+        Message.belongsTo(User, {
+            as: 'sender',
+            foreignKey: 'sender_uuid'
+        });
 
-    User.belongsToMany(Chat, {
-        through: ChatUser,
-    });
-};
+        Message.belongsTo(Chat, {
+            as: 'chat',
+            foreignKey: 'chat_uid'
+        });
 
-export const database = {
-    init: async () => {
+        User.belongsToMany(Chat, {
+            through: ChatUser,
+        });
+    }
+
+    async init() {
         try {
-            await sequelize.authenticate();
+            await this.sequelize.authenticate();
             await Promise.all(
                 Object.values(models).map(async (model) => model.init())
             );
             console.log('Connection has been established successfully.');
-            await sequelize.sync();
-            addAssociations(sequelize);
+            await this.sequelize.sync();
+            this.addAssociations();
             console.log('All models were synchronized successfully.');
         } catch (error) {
             console.error('Unable to connect to the database:', error);
         }
     }
-};
+
+    getModels() {
+        return this.sequelize.models;
+    }
+}
+
+export const database = new Database();

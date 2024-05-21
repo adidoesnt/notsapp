@@ -1,7 +1,5 @@
 import { Model, DataType } from 'sequelize-typescript';
-import { sequelize } from 'api/components/sequelize';
-import { UserModel } from './user';
-import { ChatModel } from './chat';
+import { database } from 'api/components/sequelize';
 
 const { DATABASE_SCHEMA } = process.env;
 const { STRING } = DataType;
@@ -11,7 +9,7 @@ export class MessageModel extends Model {}
 export const Message = {
     model: MessageModel,
     init: async () => {
-        sequelize.define(
+        database.sequelize.define(
             'Message',
             {
                 uid: {

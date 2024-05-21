@@ -1,15 +1,19 @@
-import { Model, DataType, addAssociation } from 'sequelize-typescript';
-import { sequelize } from 'api/components/sequelize';
+import { Model, DataType } from 'sequelize-typescript';
+import { database } from 'api/components/sequelize';
 
 const { DATABASE_SCHEMA } = process.env;
 const { STRING } = DataType;
+
+export type ChatAttributes = {
+    uid: string;
+};
 
 export class ChatModel extends Model {}
 
 export const Chat = {
     model: ChatModel,
     init: async () => {
-        sequelize.define(
+        database.sequelize.define(
             'Chat',
             {
                 uid: {
