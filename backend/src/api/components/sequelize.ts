@@ -20,11 +20,31 @@ export const sequelize = new Sequelize({
     dialect: 'postgres'
 });
 
+const addAssociations = (models: any) => {
+    const { MessageModel, UserModel, ChatModel, ChatUserModel } = sequelize.models;
+
+    MessageModel.belongsTo(UserModel, {
+        as: 'sender',
+        foreignKey: 'sender_uuid'
+    });
+
+    MessageModel.belongsTo(ChatModel, {
+        as: 'chat',
+        foreignKey: 'chat_uid'
+    });
+
+    UserModel.belongsToMany(ChatModel, {
+        through: ChatUserModel
+    });
+};
+
 export const database = {
     init: async () => {
         try {
             await sequelize.authenticate();
-            Object.values(models).forEach((model) => model.init());
+            await Promise.all(
+                Object.values(models).map(async (model) => model.init())
+            );
             console.log('Connection has been established successfully.');
             await sequelize.sync();
             console.log('All models were synchronized successfully.');

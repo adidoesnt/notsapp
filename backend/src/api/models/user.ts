@@ -1,8 +1,10 @@
-import { Model, DataType } from 'sequelize-typescript';
+import { Model, DataType, addAssociation } from 'sequelize-typescript';
 import { sequelize } from 'api/components/sequelize';
+import { ChatModel } from './chat';
+import { ChatUserModel } from './chatUser';
 
 const { DATABASE_SCHEMA } = process.env;
-const { STRING, DATE } = DataType;
+const { STRING } = DataType;
 
 export class UserModel extends Model {}
 
@@ -32,7 +34,7 @@ export const User = {
                     type: STRING,
                     allowNull: false,
                     field: 'password_hash'
-                },
+                }
             },
             {
                 schema: DATABASE_SCHEMA,
