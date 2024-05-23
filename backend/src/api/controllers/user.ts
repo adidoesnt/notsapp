@@ -1,11 +1,12 @@
 import type { NextFunction, Request, Response } from 'express';
 import { userService } from 'api/services';
 import { ERR } from 'constants/response';
+import type { AuthenticatedRequest } from 'api/middleware/auth';
 
 const { SIGNUP, LOGIN } = ERR;
 
 export type ControllerProps = {
-    request: Request;
+    request: Request | AuthenticatedRequest;
     response: Response;
     next: NextFunction;
 };

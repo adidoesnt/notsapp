@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, type User } from '@prisma/client';
 import { prisma } from 'index';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -26,7 +26,7 @@ export const getUserByUsername = async (username: string, throws?: boolean) => {
         const where: GetUserAttributes['where'] = {
             username
         };
-        let foundUser;
+        let foundUser: User | null;
         if (throws) {
             foundUser = await prisma.user.findFirstOrThrow({
                 where

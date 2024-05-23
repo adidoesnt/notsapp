@@ -3,6 +3,16 @@ export const ERR = {
         status: 500,
         message: 'Internal server error'
     },
+    UNAUTHORIZED: {
+        status: 401,
+        message: 'Unauthorized',
+        hint: 'Likely caused by a missing JSON web token'
+    },
+    FORBIDDEN: {
+        status: 403,
+        message: 'Forbidden',
+        hint: 'Likely caused by an invalid JSON web token'
+    },
     SIGNUP: {
         USER_EXISTS: {
             status: 409,

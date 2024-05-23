@@ -39,3 +39,8 @@ model Message {
   content    String
   timestamp  DateTime
 }
+
+model Session {
+  token          String  @id
+  isRefreshToken Boolean
+}
