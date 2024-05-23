@@ -4,6 +4,8 @@ import { json, urlencoded } from 'body-parser';
 import { routes } from 'api/router';
 import { getHttpServer, getServer } from 'api/server';
 import { PrismaClient } from '@prisma/client';
+import { handleError } from 'api/middleware';
+
 const { PORT = 3001 } = process.env;
 
 const app = express();
@@ -14,6 +16,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 app.use(routes());
+app.use(handleError);
 
 const httpServer = getHttpServer(app);
 const server = getServer(httpServer);

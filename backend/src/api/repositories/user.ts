@@ -8,7 +8,7 @@ export type GetUserAttributes = Prisma.UserFindFirstOrThrowArgs;
 export const createUser = async ({
     username,
     ...data
-}: CreateUserAttributes ) => {
+}: CreateUserAttributes) => {
     try {
         const UUID = uuidV4();
         const createdUser = await prisma.user.create({
@@ -21,14 +21,21 @@ export const createUser = async ({
     }
 };
 
-export const getUserByUsername = async (username: string) => {
+export const getUserByUsername = async (username: string, throws?: boolean) => {
     try {
         const where: GetUserAttributes['where'] = {
             username
         };
-        const foundUser = await prisma.user.findFirstOrThrow({
-            where
-        });
+        let foundUser;
+        if (throws) {
+            foundUser = await prisma.user.findFirstOrThrow({
+                where
+            });
+        } else {
+            foundUser = await prisma.user.findFirst({
+                where
+            });
+        }
         return foundUser;
     } catch (error) {
         console.error('Failed to find user by username', error);

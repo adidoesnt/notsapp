@@ -1,5 +1,11 @@
-import { Router, type Request, type Response } from 'express';
+import {
+    Router,
+    type NextFunction,
+    type Request,
+    type Response
+} from 'express';
 import { MSG } from 'constants/response';
+import { userController } from 'api/controllers';
 
 export const routes = () => {
     const router = Router();
@@ -8,6 +14,20 @@ export const routes = () => {
         const { status, message } = MSG.OK;
         return response.status(status).send({ message });
     });
+
+    router.post(
+        '/signup',
+        async (request: Request, response: Response, next: NextFunction) => {
+            return await userController.signup({ request, response, next });
+        }
+    );
+
+    router.post(
+        '/login',
+        async (request: Request, response: Response, next: NextFunction) => {
+            return await userController.login({ request, response, next });
+        }
+    );
 
     return router;
 };

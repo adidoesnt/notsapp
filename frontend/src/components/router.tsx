@@ -12,6 +12,7 @@ export const UnauthenticatedRouter = createBrowserRouter(
     <Route path="/">
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Login signup />} />
     </Route>
   )
 );

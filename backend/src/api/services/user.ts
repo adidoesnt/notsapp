@@ -1,4 +1,4 @@
-import * as userRepository from 'repositories/user';
+import { userRepository } from 'api/repositories';
 import { hash, compare } from 'bcrypt';
 
 const { SALT_ROUNDS = 10 } = process.env;
