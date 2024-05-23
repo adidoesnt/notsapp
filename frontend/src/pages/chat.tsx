@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Layout from '../components/layout';
 import Message, { MessageProps } from '../components/message';
-import apiClient from '../components/axios';
 
 const { VITE_SOCKET_URL: socketURL = '' } = import.meta.env;
 
@@ -17,14 +16,6 @@ function Chat() {
     const [currentMessage, setCurrentMessage] = useState('');
     const { roomId } = useParams<ChatPageProps>();
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        apiClient.get('/test').then((response) => {
-            console.log('Test response:', response);
-        }).catch((error) => {
-            console.error('Test error:', error);
-        });
-    }, [])
 
     const handleBack = () => {
         console.log('Back to home');
