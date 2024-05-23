@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  username  String
-  UUID      String     @id
-  firstName String
-  lastName  String
-  chatUsers ChatUser[]
-  messages  Message[]
+  username     String
+  UUID         String     @id
+  firstName    String
+  lastName     String
+  passwordHash String
+  chatUsers    ChatUser[]
+  messages     Message[]
 }
 
 model Chat {
