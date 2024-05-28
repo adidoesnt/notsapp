@@ -5,7 +5,7 @@ import type { Request } from 'express';
 import { verify } from 'jsonwebtoken';
 import { sessionService } from 'api/services';
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET = '' } = process.env;
 
 export type AuthenticatedRequest = Request & {
     user: User;
@@ -24,8 +24,8 @@ export const isTokenOld = async (token: string) => {
 };
 
 const verifyToken = async (token: string) => {
-    if (!JWT_SECRET) throw new Error('JWT_SECRET not set!');
     const isOld = await isTokenOld(token);
+    if(isOld) throw new Error('Token is old');
     const user = verify(token, JWT_SECRET);
     return user;
 };
@@ -40,11 +40,16 @@ export const authenticate = async ({
         const { status, message, hint } = ERR.UNAUTHORIZED;
         return response.status(status).json({ message, hint });
     }
-    const user = await verifyToken(token);
-    if (!user) {
+    try {
+        const user = await verifyToken(token);
+        if (!user) {
+            const { status, message, hint } = ERR.FORBIDDEN;
+            return response.status(status).json({ message, hint });
+        }
+        (request as AuthenticatedRequest).user = user as User;
+        next();
+    } catch (error) {
         const { status, message, hint } = ERR.FORBIDDEN;
         return response.status(status).json({ message, hint });
     }
-    (request as AuthenticatedRequest).user = user as User;
-    next();
 };
