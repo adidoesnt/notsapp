@@ -1,11 +1,11 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
+import { Socket, io } from 'socket.io-client';
 import Layout from '../components/layout';
 import Message, { MessageProps } from '../components/message';
 import { UserContext } from '../context/user';
 
-const { VITE_SOCKET_URL: socketURL = '' } = import.meta.env;
+const { VITE_API_URL: socketURL = '' } = import.meta.env;
 
 export type ChatPageProps = {
     roomId: string;
@@ -21,6 +21,7 @@ function Chat() {
     const { roomId } = useParams<ChatPageProps>();
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const { user } = useContext(UserContext)!;
+    const socketRef = useRef<Socket | null>(null);
 
     const handleBack = () => {
         console.log('Back to home');
@@ -29,21 +30,19 @@ function Chat() {
 
     const handleSendMessage = useCallback(() => {
         try {
-            if (currentMessage.trim() === '') return;
+            if (currentMessage.trim() === '' || !socketRef.current) return;
             console.log('Sending message:', currentMessage);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                {
-                    fromUUID: user!.UUID,
-                    content: currentMessage,
-                    timestamp: new Date()
-                }
-            ]);
+            socketRef.current.emit('send-message', {
+                fromUUID: user!.UUID,
+                content: currentMessage,
+                timestamp: new Date(),
+                roomId
+            });
             setCurrentMessage('');
         } catch (error) {
             console.error('Error sending message:', error);
         }
-    }, [currentMessage, user]);
+    }, [currentMessage, user, roomId]);
 
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -70,11 +69,16 @@ function Chat() {
     }, [handleKeyDown]);
 
     useEffect(() => {
-        const socket = io(socketURL);
-        socket.emit('joinRoom', roomId);
+        if (!socketRef.current) {
+            socketRef.current = io(socketURL);
+        }
+        socketRef.current.emit('joinRoom', roomId);
+        socketRef.current.on('receive-message', (data) => {
+            setMessages((prevMessages) => [...prevMessages, data]);
+        });
         return () => {
-            socket.emit('leaveRoom', roomId);
-            socket.disconnect();
+            socketRef.current?.off('receive-message');
+            socketRef.current?.emit('leaveRoom', roomId);
         };
     }, [roomId]);
 
@@ -101,6 +105,9 @@ function Chat() {
                                     message;
                                 return (
                                     <Message
+                                        key={
+                                            timestamp.toString() /* TODO: change to UID */
+                                        }
                                         content={content}
                                         fromUUID={fromUUID}
                                         timestamp={timestamp}

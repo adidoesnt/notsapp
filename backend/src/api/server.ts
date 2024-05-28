@@ -42,6 +42,11 @@ export const getServer = (httpServer: HttpServer) => {
                 console.log(`Client ${id} left room ${roomId}`);
             });
 
+            socket.on('send-message', (message) => {
+                console.log({ message: message.roomId });
+                server.to(message.roomId).emit('receive-message', message);
+            });
+
             socket.on('disconnect', () => {
                 console.log(`Client disconnected: ${id}`);
             });
