@@ -1,7 +1,6 @@
-import { useContext } from 'react';
-import { UserContext } from '../context/user';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout';
+import NavBar from '../components/navbar';
 
 const chats: Array<{
     uuid: string;
@@ -52,19 +51,6 @@ const chats: Array<{
 function Home() {
     const navigate = useNavigate();
 
-    const userContext = useContext(UserContext);
-    const { setIsLoggedIn } = userContext!;
-
-    const handleLogout = () => {
-        try {
-            console.log('Logging out...');
-            setIsLoggedIn(false);
-            navigate('/');
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const handleChatClick = (chatId: string) => {
         try {
             console.log('Navigating to chat...');
@@ -75,7 +61,7 @@ function Home() {
     };
 
     return (
-        <Layout header="Home">
+        <Layout header="Conversations" footer={<NavBar />}>
             <div className="flex flex-col w-full gap-2 justify-between overflow-hidden">
                 <div className="flex flex-col items-center w-full gap-2 overflow-auto">
                     {chats.map((chat) => (
@@ -88,12 +74,6 @@ function Home() {
                         </div>
                     ))}
                 </div>
-                <button
-                    onClick={handleLogout}
-                    className="flex bg-stone-700 w-fit self-center p-2 rounded-lg font-semibold m-2"
-                >
-                    Log out
-                </button>
             </div>
         </Layout>
     );

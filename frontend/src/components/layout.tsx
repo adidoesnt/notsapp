@@ -2,13 +2,13 @@ import { ReactNode } from 'react';
 
 export type LayoutProps = {
     header: string;
-    footer?: string;
+    footer?: ReactNode | ReactNode[] | JSX.Element | JSX.Element[];
     children: ReactNode | ReactNode[] | JSX.Element | JSX.Element[];
 };
 
 function Layout({ header, footer, children }: LayoutProps) {
     return footer ? (
-        <div className="grid grid-rows-[100px,1fr,50px] w-[90dvw] h-[100dvh] items-start text-stone-400">
+        <div className="grid grid-rows-[100px,5fr,1fr] w-[90dvw] h-[100dvh] items-start text-stone-400">
             <div
                 id="header"
                 className="flex w-full h-full justify-center items-center p-2"
