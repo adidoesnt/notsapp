@@ -11,7 +11,7 @@ function Layout({ header, footer, children }: LayoutProps) {
         <div className="grid grid-rows-[100px,5fr,1fr] w-[90dvw] h-[100dvh] items-start text-stone-400">
             <div
                 id="header"
-                className="flex w-full h-full justify-center items-center p-2"
+                className="flex w-full h-full justify-center items-center p-2 text-center"
             >
                 <h1 className="text-xl font-bold">{header}</h1>
             </div>
@@ -29,7 +29,7 @@ function Layout({ header, footer, children }: LayoutProps) {
         <div className="grid grid-rows-[100px,1fr,15px] w-[90dvw] h-[100dvh] items-start text-stone-400">
             <div
                 id="header"
-                className="flex w-full h-full justify-center items-center p-2"
+                className="flex w-full h-full justify-center items-center p-2 text-center"
             >
                 <h1 className="text-xl font-bold">{header}</h1>
             </div>

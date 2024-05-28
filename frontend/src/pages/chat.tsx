@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Layout from '../components/layout';
 import Message, { MessageProps } from '../components/message';
+import { UserContext } from '../context/user';
 
 const { VITE_SOCKET_URL: socketURL = '' } = import.meta.env;
 
@@ -12,10 +13,14 @@ export type ChatPageProps = {
 
 function Chat() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { state } = location;
+    const users = state?.users as string[];
     const [messages, setMessages] = useState<MessageProps[]>([]);
     const [currentMessage, setCurrentMessage] = useState('');
     const { roomId } = useParams<ChatPageProps>();
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const { user } = useContext(UserContext)!;
 
     const handleBack = () => {
         console.log('Back to home');
@@ -29,7 +34,7 @@ function Chat() {
             setMessages((prevMessages) => [
                 ...prevMessages,
                 {
-                    fromUUID: 'me', // TODO: Get user UUID from user context
+                    fromUUID: user!.UUID,
                     content: currentMessage,
                     timestamp: new Date()
                 }
@@ -38,7 +43,7 @@ function Chat() {
         } catch (error) {
             console.error('Error sending message:', error);
         }
-    }, [currentMessage]);
+    }, [currentMessage, user]);
 
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -81,7 +86,7 @@ function Chat() {
 
     return (
         roomId && (
-            <Layout header={`Chat Room: ${roomId}`}>
+            <Layout header={`Chat with: ${users.join(', ')}`}>
                 <div className="flex flex-col w-full h-full overflow-hidden justify-end">
                     <div
                         id="chatPageContainer"

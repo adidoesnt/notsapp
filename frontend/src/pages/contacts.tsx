@@ -3,10 +3,12 @@ import Layout from '../components/layout';
 import NavBar from '../components/navbar';
 import apiClient from '../components/axios';
 import { User, UserContext } from '../context/user';
+import { useNavigate } from 'react-router-dom';
 
 function Contacts() {
     const [contacts, setContacts] = useState<User[]>([]);
     const { user } = useContext(UserContext)!;
+    const navigate = useNavigate();
 
     const handleContactClick = async (contactUUID: string) => {
         try {
@@ -14,7 +16,18 @@ function Contacts() {
             const response = await apiClient.post('/chat', {
                 users: [user?.UUID, contactUUID].map((UUID) => ({ UUID }))
             });
-            console.log('Chat started:', response.data);
+            const { chat } = response.data;
+            const users = chat.chatUsers.map((chatUser: { user: User }) => {
+                const { firstName, lastName, username } = chatUser.user;
+                return firstName && lastName
+                    ? `${firstName} ${lastName}`
+                    : username;
+            });
+            navigate(`/chat/${chat.UID}`, {
+                state: {
+                    users
+                }
+            });
         } catch (error) {
             console.error('Error starting chat', error);
         }
