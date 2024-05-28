@@ -8,11 +8,15 @@ function Contacts() {
     const [contacts, setContacts] = useState<User[]>([]);
     const { user } = useContext(UserContext)!;
 
-    const handleContactClick = (contactUUID: string) => {
+    const handleContactClick = async (contactUUID: string) => {
         try {
             console.log(`Starting chat with contact ${contactUUID}...`);
+            const response = await apiClient.post('/chat', {
+                users: [user?.UUID, contactUUID].map((UUID) => ({ UUID }))
+            });
+            console.log('Chat started:', response.data);
         } catch (error) {
-            console.error(error);
+            console.error('Error starting chat', error);
         }
     };
 

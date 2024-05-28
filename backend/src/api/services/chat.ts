@@ -6,8 +6,8 @@ import { prisma } from 'index';
 export const createChatWithUsers = async (users: User[]) => {
     try {
         return await prisma.$transaction(async (prisma) => {
-            const chatAlreadyExists = !!(await getChatByUUIDs(users));
-            if (chatAlreadyExists) throw new Error('Chat already exists');
+            const existingChat = await getChatByUUIDs(users);
+            if (existingChat) return existingChat;
             const chat = await chatRepository.createChat();
             if (!chat) throw new Error('Failed to create chat');
             const chatUsers = await chatUserService.createChatUsers(

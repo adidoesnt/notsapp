@@ -36,6 +36,9 @@ export const getChatByUUIDs = async (data: FindChatByUUIDsAttributes) => {
                         }
                     }
                 }
+            },
+            include: {
+                chatUsers: true
             }
         });
         return chat;
