@@ -1,5 +1,5 @@
 import { ERR } from 'constants/response';
-import type { ControllerProps } from './types';
+import type { ControllerProps } from 'api/controllers';
 import { chatUserService } from 'api/services';
 
 export const createChatWithUsers = async ({
@@ -9,6 +9,15 @@ export const createChatWithUsers = async ({
 }: ControllerProps) => {
     try {
         const { users } = request.body;
+        if (users?.length < 2) {
+            const { status, message } = ERR.BAD_REQUEST;
+            return response
+                .status(status)
+                .json({
+                    message,
+                    hint: 'Chat creation requires at least two users'
+                });
+        }
         const chat = await chatUserService.createChatWithUsers(users);
         if (!chat) {
             const { status, message } = ERR.INTERNAL;

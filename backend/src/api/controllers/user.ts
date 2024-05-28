@@ -1,6 +1,6 @@
 import { userService } from 'api/services';
 import { ERR } from 'constants/response';
-import type { ControllerProps } from './types';
+import type { ControllerProps } from 'api/controllers';
 
 const { SIGNUP, LOGIN } = ERR;
 

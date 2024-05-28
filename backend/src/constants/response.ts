@@ -3,6 +3,10 @@ export const ERR = {
         status: 500,
         message: 'Internal server error'
     },
+    BAD_REQUEST: {
+        status: 400,
+        message: 'Bad request'
+    },
     UNAUTHORIZED: {
         status: 401,
         message: 'Unauthorized',
