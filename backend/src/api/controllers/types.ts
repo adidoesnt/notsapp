@@ -1,4 +1,4 @@
-import type { AuthenticatedRequest } from "api/middleware";
+import type { AuthenticatedRequest } from 'api/middleware';
 import type { NextFunction, Request, Response } from 'express';
 
 export type ControllerProps = {

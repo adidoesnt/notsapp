@@ -1,4 +1,4 @@
-import type { Prisma, User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { chatRepository } from 'api/repositories';
 import { chatUserService } from 'api/services';
 

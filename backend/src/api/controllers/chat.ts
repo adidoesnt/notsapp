@@ -11,12 +11,10 @@ export const createChatWithUsers = async ({
         const { users } = request.body;
         if (users?.length < 2) {
             const { status, message } = ERR.BAD_REQUEST;
-            return response
-                .status(status)
-                .json({
-                    message,
-                    hint: 'Chat creation requires at least two users'
-                });
+            return response.status(status).json({
+                message,
+                hint: 'Chat creation requires at least two users'
+            });
         }
         const chat = await chatService.createChatWithUsers(users);
         if (!chat) {
