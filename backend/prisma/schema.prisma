@@ -45,4 +45,5 @@ model Message {
 model Session {
   token          String  @id
   isRefreshToken Boolean
+  isRevoked      Boolean @default(false)
 }

@@ -20,7 +20,7 @@ const getTokenFromRequest = (request: ControllerProps['request']) => {
 
 export const isTokenOld = async (token: string) => {
     const foundToken = await sessionService.getSessionByToken(token);
-    return !!foundToken;
+    return foundToken?.isRevoked;
 };
 
 const verifyToken = async (token: string) => {

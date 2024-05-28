@@ -40,3 +40,13 @@ export const signup = async ({ request, response, next }: ControllerProps) => {
         next(error);
     }
 };
+
+export const getAllUsers = async ({ response, next }: ControllerProps) => {
+    try {
+        const users = await userService.getAllUsers();
+        response.json({ users });
+    } catch (error) {
+        console.error('Failed to get all users', error);
+        next(error);
+    }
+};

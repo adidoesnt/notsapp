@@ -46,5 +46,16 @@ export const routes = () => {
         }
     );
 
+    router.get(
+        '/users',
+        async (request: Request, response: Response, next: NextFunction) => {
+            return await userController.getAllUsers({
+                request,
+                response,
+                next
+            });
+        }
+    );
+
     return router;
 };

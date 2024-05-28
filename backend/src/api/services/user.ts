@@ -85,3 +85,16 @@ export const login = async (username: string, password: string) => {
         console.error('Error completing login', error);
     }
 };
+
+export const getAllUsers = async () => {
+    try {
+        const users = await userRepository.getAllUsers();
+        if (!users) throw new Error('No users found!');
+        const usersWithoutPasswordHash = users.map(
+            ({ passwordHash, ...user }) => user
+        );
+        return usersWithoutPasswordHash;
+    } catch (error) {
+        console.error('Failed to get all users', error);
+    }
+};

@@ -41,3 +41,12 @@ export const getUserByUsername = async (username: string, throws?: boolean) => {
         console.error('Failed to find user by username', error);
     }
 };
+
+export const getAllUsers = async () => {
+    try {
+        const users = await prisma.user.findMany();
+        return users;
+    } catch (error) {
+        console.error('Failed to get all users', error);
+    }
+};
