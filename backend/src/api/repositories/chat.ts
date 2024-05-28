@@ -10,6 +10,10 @@ export type FindChatByUUIDsAttributes = {
     userUUIDs: string[];
 };
 
+export type FindManyChatsByUUIDAttributes = {
+    userUUID: string;
+};
+
 export const createChat = () => {
     const uid = uuidv4();
     try {
@@ -55,5 +59,37 @@ export const getChatByUUIDs = async (data: FindChatByUUIDsAttributes) => {
         return chat;
     } catch (error) {
         console.error('Failed to get chat by UUIDs', error);
+    }
+};
+
+export const getManyChatsByUUID = async (data: FindManyChatsByUUIDAttributes) => {
+    try {
+        const { userUUID } = data;
+        const chats = await prisma.chat.findMany({
+            where: {
+                chatUsers: {
+                    some: {
+                        userUUID
+                    }
+                }
+            },
+            include: {
+                chatUsers: {
+                    include: {
+                        user: {
+                            select: {
+                                UUID: true,
+                                username: true,
+                                firstName: true,
+                                lastName: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return chats;
+    } catch (error) {
+        console.error('Failed to get many chats by UUID', error);
     }
 };

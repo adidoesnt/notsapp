@@ -27,3 +27,18 @@ export const createChatWithUsers = async ({
         next(error);
     }
 };
+
+export const getAllChatsByUUID = async ({
+    request,
+    response,
+    next
+}: ControllerProps) => {
+    try {
+        const { userUUID } = request.params;
+        const chats = await chatService.getManyChatsByUUID(userUUID);
+        response.json({ chats });
+    } catch (error) {
+        console.error('Failed to get all chats by UUID', error);
+        next(error);
+    }
+};

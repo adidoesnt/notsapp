@@ -86,7 +86,7 @@ function Chat() {
 
     return (
         roomId && (
-            <Layout header={`Chat with: ${users.join(', ')}`}>
+            <Layout header={`Chat with: ${users?.join(', ')}`}>
                 <div className="flex flex-col w-full h-full overflow-hidden justify-end">
                     <div
                         id="chatPageContainer"

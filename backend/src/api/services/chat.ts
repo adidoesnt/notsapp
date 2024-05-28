@@ -34,3 +34,15 @@ export const getChatByUUIDs = async (users: User[]) => {
         console.error('Failed to get chat by UUIDs', error);
     }
 };
+
+export const getManyChatsByUUID = async (userUUID: string) => {
+    try {
+        const data = {
+            userUUID
+        };
+        const chats = await chatRepository.getManyChatsByUUID(data);
+        return chats;
+    } catch (error) {
+        console.error('Failed to get many chats by UUID', error);
+    }
+};

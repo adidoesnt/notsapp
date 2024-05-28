@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import { UserContext } from "../context/user";
+
 export type MessageProps = {
     fromUUID: string;
     content: string;
@@ -5,6 +8,7 @@ export type MessageProps = {
 };
 
 function Message({ fromUUID, content, timestamp }: MessageProps) {
+    const { user } = useContext(UserContext)!;
     const formattedTimestamp = new Date(timestamp)
         .toLocaleString()
         .split(',')[1]
@@ -12,7 +16,7 @@ function Message({ fromUUID, content, timestamp }: MessageProps) {
         .slice(0, 2)
         .join(':');
 
-    const isMe = fromUUID === 'me'; // TODO: Get user UUID from user context
+    const isMe = fromUUID === user?.UUID;
 
     return isMe ? (
         <div key={fromUUID} className="flex flex-col rounded-lg bg-stone-700 p-2 self-end m-2 gap-1">

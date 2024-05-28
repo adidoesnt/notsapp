@@ -1,64 +1,67 @@
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout';
 import NavBar from '../components/navbar';
+import { useContext, useEffect, useState } from 'react';
+import apiClient from '../components/axios';
+import { User, UserContext } from '../context/user';
 
-const chats: Array<{
-    uuid: string;
-    name: string;
-}> = [
-    {
-        uuid: '1',
-        name: 'Chat 1'
-    },
-    {
-        uuid: '2',
-        name: 'Chat 2'
-    },
-    {
-        uuid: '3',
-        name: 'Chat 3'
-    },
-    {
-        uuid: '4',
-        name: 'Chat 4'
-    },
-    {
-        uuid: '5',
-        name: 'Chat 5'
-    },
-    {
-        uuid: '6',
-        name: 'Chat 6'
-    },
-    {
-        uuid: '7',
-        name: 'Chat 7'
-    },
-    {
-        uuid: '8',
-        name: 'Chat 8'
-    },
-    {
-        uuid: '9',
-        name: 'Chat 9'
-    },
-    {
-        uuid: '10',
-        name: 'Chat 10'
-    }
-];
+export type Chat = {
+    UID: string;
+    chatUsers: {
+        user: {
+            UUID: string;
+            username: string;
+            firstName: string;
+            lastName: string;
+        };
+    }[];
+};
 
 function Home() {
     const navigate = useNavigate();
+    const { user } = useContext(UserContext)!;
+    const [chats, setChats] = useState<Chat[]>([]);
 
-    const handleChatClick = (chatId: string) => {
+    const handleChatClick = (chat: Chat) => {
         try {
             console.log('Navigating to chat...');
-            navigate(`/chat/${chatId}`);
+            const users = chat.chatUsers.map((chatUser) => {
+                const { firstName, lastName, username } = chatUser.user;
+                return firstName && lastName
+                    ? `${firstName} ${lastName}`
+                    : username;
+            });
+            navigate(`/chat/${chat.UID}`, {
+                state: {
+                    users
+                }
+            });
         } catch (error) {
             console.error(error);
         }
     };
+
+    const getRecipient = (chat: Chat) => {
+        const recipient = chat.chatUsers.find(
+            (chatUser) => chatUser.user.UUID !== user?.UUID
+        );
+        const details = recipient?.user as User;
+        const { firstName, lastName, username } = details;
+        return firstName && lastName ? `${firstName} ${lastName}` : username;
+    };
+
+    useEffect(() => {
+        console.log('Fetching chats...');
+        apiClient
+            .get(`/chats/${user?.UUID}`)
+            .then((response) => {
+                const { chats } = response.data;
+                setChats(chats);
+            })
+            .catch((error) => {
+                console.error('Unable to fetch chats', error);
+            });
+    }, [user?.UUID]);
 
     return (
         <Layout header="Conversations" footer={<NavBar />}>
@@ -66,11 +69,11 @@ function Home() {
                 <div className="flex flex-col items-center w-full gap-2 overflow-auto">
                     {chats.map((chat) => (
                         <div
-                            key={chat.uuid}
+                            key={chat.UID}
                             className="flex w-[90%] p-2 border-2 rounded-lg border-transparent bg-stone-900"
-                            onClick={() => handleChatClick(chat.uuid)}
+                            onClick={() => handleChatClick(chat)}
                         >
-                            <h2>{chat.name}</h2>
+                            <h2>{getRecipient(chat)}</h2>
                         </div>
                     ))}
                 </div>
