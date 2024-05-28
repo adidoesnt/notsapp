@@ -7,7 +7,7 @@
     "dev": "bun run --watch src/index.ts",
     "format": "prettier --write *",
     "migrate": "prisma migrate dev --name $1",
-    "connect": "psql -U adityabanerjee -h localhost -p 5432 -d notsapp"
+    "connect": "psql -h localhost -p 5432 -d notsapp -U $1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
