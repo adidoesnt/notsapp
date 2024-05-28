@@ -1,18 +1,15 @@
 import type { Prisma } from '@prisma/client';
 import { prisma } from 'index';
-import { v4 as uuidv4 } from 'uuid';
 
-export type CreateChatWithUsersAttributes = Prisma.ChatUserCreateManyInput[];
+export type CreateChatUsersAttributes = Prisma.ChatUserCreateManyInput[];
 
-export const createManyChatUsers = async (
-    data: CreateChatWithUsersAttributes
-) => {
+export const createChatUsers = async (data: CreateChatUsersAttributes) => {
     try {
-        const chat = await prisma.chatUser.createManyAndReturn({
+        const chatUsersCreated = await prisma.chatUser.createManyAndReturn({
             data
         });
-        return chat;
+        return chatUsersCreated;
     } catch (error) {
-        console.error('Failed to create chat with users', error);
+        console.error('Failed to create chat users', error);
     }
 };

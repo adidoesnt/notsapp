@@ -2,7 +2,7 @@ import type { User } from '@prisma/client';
 import { userRepository } from 'api/repositories';
 import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { sessionService } from '.';
+import { sessionService } from 'api/services';
 
 const { SALT_ROUNDS = 10, JWT_SECRET } = process.env;
 

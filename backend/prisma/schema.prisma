@@ -24,10 +24,11 @@ model Chat {
 }
 
 model ChatUser {
+  id       Int    @id @default(autoincrement())
   chat     Chat   @relation(fields: [chatUID], references: [UID])
-  chatUID  String @unique
+  chatUID  String
   user     User   @relation(fields: [userUUID], references: [UUID])
-  userUUID String @unique
+  userUUID String
 }
 
 model Message {
