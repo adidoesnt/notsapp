@@ -5,7 +5,7 @@ import {
     type Response
 } from 'express';
 import { MSG } from 'constants/response';
-import { userController } from 'api/controllers';
+import { chatUserController, userController } from 'api/controllers';
 import { authenticate } from 'api/middleware';
 
 export const routes = () => {
@@ -33,6 +33,17 @@ export const routes = () => {
     router.use(
         async (request: Request, response: Response, next: NextFunction) =>
             await authenticate({ request, response, next })
+    );
+
+    router.post(
+        '/chat',
+        async (request: Request, response: Response, next: NextFunction) => {
+            return await chatUserController.createChatWithUsers({
+                request,
+                response,
+                next
+            });
+        }
     );
 
     return router;
