@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { UserContext } from "../context/user";
+import { User, UserContext } from "../context/user";
 import { useNavigate } from "react-router-dom";
 import apiClient, { setAuthToken } from "../components/axios";
 
@@ -11,7 +11,7 @@ function Login({ signup }: LoginProps) {
   const navigate = useNavigate();
 
   const userContext = useContext(UserContext);
-  const { setIsLoggedIn } = userContext!;
+  const { setIsLoggedIn, setUser } = userContext!;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -53,8 +53,8 @@ function Login({ signup }: LoginProps) {
       lastName,
     });
     const { user } = response.data;
-    const { token } = user;
-    return token;
+    const { token, ...details } = user;
+    return { token, details };
   }
 
   const handleLogin = async () => {
@@ -63,20 +63,25 @@ function Login({ signup }: LoginProps) {
       password,
     });
     const { user } = response.data;
-    const { token } = user;
-    return token;
+    const { token, ...details } = user;
+    return { token, details };
   }
 
   const handleSubmit = async () => {
     try {
       if (validateFields()) {
-        let token: string;
+        let user: {
+          token: string;
+          details: User;
+        };
         if (signup) {
-          token = await handleSignup();
+          user = await handleSignup();
         } else {
-          token = await handleLogin();
+          user = await handleLogin();
         }
+        const { token, details } = user;
         setAuthToken(token);
+        setUser(details as User);
         setIsLoggedIn(true);
         navigate("/");
       }
