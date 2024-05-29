@@ -8,11 +8,12 @@ import Home from '../pages/home';
 import Chat from '../pages/chat';
 import Contacts from '../pages/contacts';
 import Settings from '../pages/settings';
+import Landing from '../pages/landing';
 
 export const UnauthenticatedRouter = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/">
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Login signup />} />
         </Route>
