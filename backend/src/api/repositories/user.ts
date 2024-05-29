@@ -42,6 +42,27 @@ export const getUserByUsername = async (username: string, throws?: boolean) => {
     }
 };
 
+export const getUserByUUID = async (UUID: string, throws?: boolean) => {
+    try {
+        const where: GetUserAttributes['where'] = {
+            UUID
+        };
+        let foundUser: User | null;
+        if (throws) {
+            foundUser = await prisma.user.findFirstOrThrow({
+                where
+            });
+        } else {
+            foundUser = await prisma.user.findFirst({
+                where
+            });
+        }
+        return foundUser;
+    } catch (error) {
+        console.error('Failed to find user by UUID', error);
+    }
+};
+
 export const getAllUsers = async () => {
     try {
         const users = await prisma.user.findMany();

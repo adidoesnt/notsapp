@@ -15,7 +15,7 @@ export const createChatWithUsers = async (users: User[]) => {
                 users
             );
             if (!chatUsers) throw new Error('Failed to create chat users');
-            return { ...chat, users: chatUsers };
+            return { ...chat, chatUsers };
         });
     } catch (error) {
         console.error('Failed to create chat with users', error);

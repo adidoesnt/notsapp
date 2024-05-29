@@ -98,3 +98,14 @@ export const getAllUsers = async () => {
         console.error('Failed to get all users', error);
     }
 };
+
+export const getUserByUUID = async (UUID: string) => {
+    try {
+        const user = await userRepository.getUserByUUID(UUID);
+        if (!user) throw new Error(`User ${UUID} not found!`);
+        const { passwordHash, ...userWithoutPasswordHash } = user;
+        return userWithoutPasswordHash;
+    } catch (error) {
+        console.error('Failed to get user by UUID', error);
+    }
+};
