@@ -8,7 +8,7 @@
         "format": "prettier --write *",
         "migrate:create": "prisma migrate dev --name $1",
         "migrate": "prisma migrate deploy",
-        "connect": "psql -h localhost -p 5432 -d notsapp -U $1"
+        "connect": "psql -h localhost -p 5432 -d notsapp -U"
     },
     "devDependencies": {
         "@types/bcrypt": "^5.0.2",
