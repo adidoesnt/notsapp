@@ -6,7 +6,8 @@
         "start": "bun run src/index.ts",
         "dev": "bun run --watch src/index.ts",
         "format": "prettier --write *",
-        "migrate": "prisma migrate dev --name $1",
+        "migrate:create": "prisma migrate dev --name $1",
+        "migrate": "prisma migrate deploy",
         "connect": "psql -h localhost -p 5432 -d notsapp -U $1"
     },
     "devDependencies": {
