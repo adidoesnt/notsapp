@@ -14,10 +14,10 @@ export type FindManyChatsByUUIDAttributes = {
     userUUID: string;
 };
 
-export const createChat = () => {
+export const createChat = async () => {
     const uid = uuidv4();
     try {
-        const chat = prisma.chat.create({
+        const chat = await prisma.chat.create({
             data: {
                 UID: uid
             }
