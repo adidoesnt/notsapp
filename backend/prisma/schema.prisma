@@ -35,9 +35,9 @@ model ChatUser {
 model Message {
   UID        String   @id
   chat       Chat     @relation(fields: [chatUID], references: [UID])
-  chatUID    String   @unique
+  chatUID    String
   sender     User     @relation(fields: [senderUUID], references: [UUID])
-  senderUUID String   @unique
+  senderUUID String
   content    String
   timestamp  DateTime
 }

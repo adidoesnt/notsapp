@@ -1,6 +1,7 @@
 import { type Express } from 'express';
 import { createServer, type Server as HttpServer } from 'http';
 import { Server } from 'socket.io';
+import { messageService } from './services';
 
 export type CustomHttpServer = HttpServer & {
     init: (port: string | number) => void;
@@ -42,9 +43,18 @@ export const getServer = (httpServer: HttpServer) => {
                 console.log(`Client ${id} left room ${roomId}`);
             });
 
-            socket.on('send-message', (message) => {
-                console.log({ message: message.roomId });
-                server.to(message.roomId).emit('receive-message', message);
+            socket.on('send-message', async (message) => {
+                console.log(`Client ${id} sent message`, { message });
+                try {
+                    const savedMessage =
+                        await messageService.createMessage(message);
+                    if (!savedMessage) throw new Error('Saved message is null');
+                    const { UID } = savedMessage;
+                    console.log(`Message created: ${UID}`);
+                    server.to(message.roomId).emit('receive-message', message);
+                } catch (error) {
+                    console.error('Failed to create message', error);
+                }
             });
 
             socket.on('disconnect', () => {

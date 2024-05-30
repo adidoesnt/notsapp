@@ -1,11 +1,12 @@
-import type { Prisma } from '@prisma/client';
 import { prisma } from 'index';
 import { v4 as uuidv4 } from 'uuid';
 
-export type CreateMessageAttributes = Omit<
-    Omit<Prisma.MessageCreateInput, 'UID'>,
-    'timestamp'
->;
+export type CreateMessageAttributes = {
+    chatUID: string;
+    content: string;
+    senderUUID: string;
+    timestamp: Date;
+};
 
 export type FindMessageAttributes = {
     UID: string;
@@ -17,7 +18,17 @@ export const createMessage = async (data: CreateMessageAttributes) => {
         const timestamp = new Date();
         await prisma.message.create({
             data: {
-                ...data,
+                chat: {
+                    connect: {
+                        UID: data.chatUID
+                    }
+                },
+                sender: {
+                    connect: {
+                        UUID: data.senderUUID
+                    }
+                },
+                content: data.content,
                 UID,
                 timestamp
             }
