@@ -17,6 +17,10 @@ export const ERR = {
         message: 'Forbidden',
         hint: 'Likely caused by an invalid JSON web token'
     },
+    NOT_FOUND: {
+        status: 404,
+        message: 'Not found'
+    },
     SIGNUP: {
         USER_EXISTS: {
             status: 409,
@@ -35,5 +39,9 @@ export const MSG = {
     OK: {
         status: 200,
         message: 'OK'
+    },
+    CREATED: {
+        status: 201,
+        message: 'Created'
     }
 };

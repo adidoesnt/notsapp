@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client';
 import { prisma } from 'index';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,6 +12,8 @@ export type CreateMessageAttributes = {
 export type FindMessageAttributes = {
     UID: string;
 };
+
+export type FindManyMessagesAttributes = Prisma.MessageFindManyArgs;
 
 export const createMessage = async (data: CreateMessageAttributes) => {
     try {
@@ -67,6 +70,16 @@ export const getMessageByUID = async (data: FindMessageAttributes) => {
         return message;
     } catch (error) {
         console.error('Failed to find message by UID', error);
+        return null;
+    }
+};
+
+export const getMessagesByChatUID = async (data: FindManyMessagesAttributes) => {
+    try {
+        const messages = await prisma.message.findMany(data);
+        return messages;
+    } catch (error) {
+        console.error('Failed to get messages by chat UID', error);
         return null;
     }
 };

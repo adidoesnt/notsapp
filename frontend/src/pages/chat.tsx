@@ -4,6 +4,7 @@ import { Socket, io } from 'socket.io-client';
 import Layout from '../components/layout';
 import Message, { MessageProps } from '../components/message';
 import { UserContext } from '../context/user';
+import apiClient from '../components/axios';
 
 const { VITE_API_URL: socketURL = '' } = import.meta.env;
 
@@ -68,19 +69,31 @@ function Chat() {
         };
     }, [handleKeyDown]);
 
-    useEffect(() => {
-        if (!socketRef.current) {
-            socketRef.current = io(socketURL);
+    const fetchMessages = useCallback(async () => {
+        try {
+            const response = await apiClient.get(`/messages/${roomId}`);
+            const { messages } = response.data;
+            setMessages(messages);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
         }
-        socketRef.current.emit('joinRoom', roomId);
-        socketRef.current.on('receive-message', (data) => {
-            setMessages((prevMessages) => [...prevMessages, data]);
+    }, [setMessages, roomId]);
+
+    useEffect(() => {
+        fetchMessages().then(() => {
+            if (!socketRef.current) {
+                socketRef.current = io(socketURL);
+            }
+            socketRef.current.emit('joinRoom', roomId);
+            socketRef.current.on('receive-message', async () => {
+                await fetchMessages();
+            });
         });
         return () => {
             socketRef.current?.off('receive-message');
             socketRef.current?.emit('leaveRoom', roomId);
         };
-    }, [roomId]);
+    }, [roomId, fetchMessages]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -101,16 +114,15 @@ function Chat() {
                             className="flex flex-col justify-end flex-grow relative w-full p-2 gap-2 text-stone-400"
                         >
                             {messages.map((message) => {
-                                const { content, fromUUID, timestamp } =
+                                const { UID, content, fromUUID, timestamp } =
                                     message;
                                 return (
                                     <Message
-                                        key={
-                                            timestamp.toString() /* TODO: change to UID */
-                                        }
+                                        key={UID}
                                         content={content}
                                         fromUUID={fromUUID}
                                         timestamp={timestamp}
+                                        UID={UID}
                                     />
                                 );
                             })}

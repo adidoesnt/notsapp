@@ -51,7 +51,7 @@ export const getServer = (httpServer: HttpServer) => {
                     if (!savedMessage) throw new Error('Saved message is null');
                     const { UID } = savedMessage;
                     console.log(`Message created: ${UID}`);
-                    server.to(message.roomId).emit('receive-message', message);
+                    server.to(message.roomId).emit('receive-message', savedMessage);
                 } catch (error) {
                     console.error('Failed to create message', error);
                 }

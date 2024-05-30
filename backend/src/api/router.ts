@@ -5,7 +5,11 @@ import {
     type Response
 } from 'express';
 import { MSG } from 'constants/response';
-import { chatController, userController } from 'api/controllers';
+import {
+    chatController,
+    messageController,
+    userController
+} from 'api/controllers';
 import { authenticate } from 'api/middleware';
 
 export const routes = () => {
@@ -61,6 +65,17 @@ export const routes = () => {
         '/users',
         async (request: Request, response: Response, next: NextFunction) => {
             return await userController.getAllUsers({
+                request,
+                response,
+                next
+            });
+        }
+    );
+
+    router.get(
+        '/messages/:chatUID',
+        async (request: Request, response: Response, next: NextFunction) => {
+            return await messageController.getMessagesByChatUID({
                 request,
                 response,
                 next
